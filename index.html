@@ -1,11 +1,47 @@
-<!DOCTYPE html>
-<html lang='en'>
+<!doctype html>
+<html lang="fr">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width">
-  <title> Student Management System </title>
+  <title>Mon portfolio</title>
 </head>
 <body>
-  <h1> Student Management System </h1>
+  <h1>Mon portfolio</h1>
+  <div id="projects">Chargement…</div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const db = window.supabase.createClient(
+      "https://cgvdngujplxhqddcpmwf.supabase.co",
+      "sb_publishable_Bm8o5kQGcdcemSjrTLyJHg_Mf_JDDIo"
+    );
+
+    async function afficherProjets() {
+      const { data, error } = await db
+        .from("projects")
+        .select("titre, description, lien");
+
+      const zone = document.querySelector("#projects");
+
+      if (error) {
+        zone.textContent = "Erreur de chargement.";
+        console.error(error);
+        return;
+      }
+
+      zone.textContent = "";
+
+      data.forEach(projet => {
+        const titre = document.createElement("h2");
+        titre.textContent = projet.titre;
+
+        const description = document.createElement("p");
+        description.textContent = projet.description || "";
+
+        zone.append(titre, description);
+      });
+    }
+
+    afficherProjets();
+  </script>
 </body>
 </html>
